@@ -3,6 +3,9 @@
 Static marketing site for **Lumi Dessert**, a San Ramon, CA dessert shop
 crafting handcrafted, family-friendly tiramisu.
 
+- **Live site:** https://lumi-dessert.netlify.app
+- **Source repo:** https://github.com/hexiang-wang/lumi-dessert-website
+
 ## Structure
 
 ```
@@ -29,6 +32,24 @@ Then open http://localhost:4173
 
 All copy lives directly in `index.html`. Colors and fonts are defined as
 CSS variables at the top of `css/style.css` (`:root`).
+
+## Deploying changes
+
+1. Edit files, preview locally (`python3 -m http.server 4173`).
+2. Commit and push to GitHub:
+   ```bash
+   git add -A
+   git commit -m "describe the change"
+   git push
+   ```
+3. Publish to the live site:
+   ```bash
+   npx netlify-cli deploy --prod --dir=.
+   ```
+
+To make step 3 automatic on every push, link the GitHub repo in the Netlify
+dashboard: Site settings → Build & deploy → Continuous deployment → Link
+repository (one-time, requires authorizing the Netlify GitHub App).
 
 ## Still needed
 
