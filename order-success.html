@@ -32,6 +32,21 @@
       <a href="index.html" class="btn btn-primary">Back to Home</a>
     </div>
   </section>
+
+  <section class="subscribe">
+    <div class="container subscribe-inner">
+      <span class="subscribe-emoji">💌</span>
+      <h2 class="order-h2" style="text-align:center;">Want first dibs on new flavors?</h2>
+      <p class="section-sub center">Join our list for market dates and new-flavor drops.</p>
+      <form class="subscribe-form" id="subscribe-form">
+        <input type="text" name="company" class="subscribe-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label class="sr-only" for="subscribe-email">Email address</label>
+        <input type="email" id="subscribe-email" name="email" placeholder="you@example.com" required>
+        <button type="submit" class="btn btn-primary" id="subscribe-btn">Join the List</button>
+      </form>
+      <p class="subscribe-message" id="subscribe-message" hidden></p>
+    </div>
+  </section>
 </main>
 
 <footer class="site-footer">
@@ -40,5 +55,6 @@
   </div>
 </footer>
 
+<script src="js/subscribe.js"></script>
 </body>
 </html>

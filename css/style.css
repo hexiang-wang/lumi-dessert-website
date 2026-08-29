@@ -549,6 +549,70 @@ ul { margin: 0; padding: 0; list-style: none; }
   font-weight: 600;
 }
 
+/* ---------- Subscribe ---------- */
+.subscribe {
+  padding: 80px 0;
+  background: var(--cream-deep);
+  text-align: center;
+}
+.subscribe-inner {
+  max-width: 520px;
+  margin: 0 auto;
+}
+.subscribe-emoji {
+  font-size: 2.2rem;
+  display: block;
+  margin-bottom: 6px;
+}
+.subscribe-form {
+  display: flex;
+  gap: 12px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.subscribe-form input[type="email"] {
+  flex: 1;
+  min-width: 220px;
+  padding: 14px 20px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(107,70,48,0.18);
+  background: var(--white);
+  font-family: var(--font-body);
+  font-size: 0.98rem;
+  color: var(--text);
+}
+.subscribe-form input[type="email"]:focus {
+  outline: none;
+  border-color: var(--pink);
+}
+.subscribe-honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.subscribe-message {
+  margin: 18px 0 0;
+  font-weight: 600;
+  color: var(--mint-deep);
+}
+.subscribe-message-error {
+  color: #c0392b;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ---------- Closing ---------- */
 .closing {
   padding: 100px 0;

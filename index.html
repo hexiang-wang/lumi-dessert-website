@@ -225,6 +225,23 @@
     </div>
   </section>
 
+  <!-- SUBSCRIBE -->
+  <section class="subscribe">
+    <div class="container subscribe-inner">
+      <span class="subscribe-emoji">💌</span>
+      <h2 class="section-title center">Get Sweet Updates</h2>
+      <p class="section-sub center">Be the first to hear about new flavors, farmers market dates,
+      and the occasional treat. No spam, ever.</p>
+      <form class="subscribe-form" id="subscribe-form">
+        <input type="text" name="company" class="subscribe-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label class="sr-only" for="subscribe-email">Email address</label>
+        <input type="email" id="subscribe-email" name="email" placeholder="you@example.com" required>
+        <button type="submit" class="btn btn-primary" id="subscribe-btn">Join the List</button>
+      </form>
+      <p class="subscribe-message" id="subscribe-message" hidden></p>
+    </div>
+  </section>
+
   <!-- CLOSING / COMMUNITY -->
   <section class="closing">
     <div class="container closing-inner">
@@ -275,5 +292,6 @@
 </footer>
 
 <script src="js/script.js"></script>
+<script src="js/subscribe.js"></script>
 </body>
 </html>
