@@ -1,0 +1,13 @@
+{
+  "name": "lumi-dessert-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lumi Dessert marketing site + online ordering",
+  "scripts": {
+    "dev": "python3 -m http.server 4173",
+    "deploy": "netlify deploy --prod --dir=."
+  },
+  "dependencies": {
+    "stripe": "^17.4.0"
+  }
+}

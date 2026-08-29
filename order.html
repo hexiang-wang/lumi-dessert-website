@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Online | Lumi Dessert</title>
+<meta name="description" content="Order handcrafted Lumi tiramisu online for pickup at the farmers market or local delivery.">
+<link rel="icon" href="images/logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/order.css">
+</head>
+<body>
+
+<div class="topbar">Now Open · Handcrafted Tiramisu, Made in San Ramon, CA</div>
+
+<header class="site-header" id="header">
+  <div class="container header-inner">
+    <a href="index.html" class="brand">
+      <img src="images/logo.jpg" alt="Lumi Dessert &amp; Coffee logo" class="brand-logo">
+      <span class="brand-word">lumi</span>
+    </a>
+    <nav class="main-nav" id="main-nav">
+      <a href="index.html#story">Our Story</a>
+      <a href="index.html#flavors">Flavors</a>
+      <a href="index.html#quality">Our Craft</a>
+      <a href="index.html#visit">Visit Us</a>
+      <a href="order.html" class="nav-cta">Order Online</a>
+    </nav>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="order-hero">
+    <div class="container">
+      <p class="eyebrow center">Order Online</p>
+      <h1 class="section-title center">Build Your Box of Lumi</h1>
+      <p class="section-sub center">Every flavor, $11 per 8–9oz serving. Choose pickup at our
+      farmers market booth or local delivery.</p>
+    </div>
+  </section>
+
+  <section class="order-section">
+    <div class="container order-layout">
+
+      <!-- MENU / CART -->
+      <div class="order-menu">
+        <h2 class="order-h2">1. Choose Your Flavors</h2>
+        <div class="menu-list" id="menu-list"><!-- populated by js/order.js --></div>
+      </div>
+
+      <!-- SUMMARY (sticky sidebar) -->
+      <aside class="order-summary" id="order-summary">
+        <h2 class="order-h2">Order Summary</h2>
+        <div class="summary-lines" id="summary-lines">
+          <p class="empty-cart">Your box is empty — add a flavor to get started.</p>
+        </div>
+        <div class="summary-totals" id="summary-totals" hidden>
+          <div class="summary-row"><span>Subtotal</span><span id="sum-subtotal">$0.00</span></div>
+          <div class="summary-row" id="sum-delivery-row" hidden><span>Delivery</span><span id="sum-delivery">$0.00</span></div>
+          <div class="summary-row summary-total"><span>Total</span><span id="sum-total">$0.00</span></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="order-section order-section-alt">
+    <div class="container order-layout">
+
+      <!-- FULFILLMENT + CONTACT FORM -->
+      <form class="order-form" id="order-form">
+        <h2 class="order-h2">2. Pickup or Delivery</h2>
+        <div class="fulfillment-toggle" role="tablist">
+          <button type="button" class="fulfillment-btn is-active" data-fulfillment="pickup">📍 Market Pickup</button>
+          <button type="button" class="fulfillment-btn" data-fulfillment="delivery">🚗 Local Delivery</button>
+        </div>
+
+        <div class="fulfillment-panel" id="panel-pickup">
+          <label class="field">
+            <span>Pickup date</span>
+            <input type="date" name="pickupDate" id="pickup-date">
+          </label>
+          <p class="field-note">We'll confirm your exact pickup time at the booth by email once
+          the market schedule is set.</p>
+        </div>
+
+        <div class="fulfillment-panel" id="panel-delivery" hidden>
+          <label class="field">
+            <span>Street address</span>
+            <input type="text" name="address1" id="address1" placeholder="123 Main St">
+          </label>
+          <label class="field">
+            <span>Apt / Unit (optional)</span>
+            <input type="text" name="address2" id="address2">
+          </label>
+          <div class="field-row">
+            <label class="field">
+              <span>City</span>
+              <input type="text" name="city" id="city" value="San Ramon">
+            </label>
+            <label class="field field-narrow">
+              <span>State</span>
+              <input type="text" name="state" id="state" value="CA" maxlength="2">
+            </label>
+            <label class="field field-narrow">
+              <span>ZIP</span>
+              <input type="text" name="zip" id="zip" inputmode="numeric" maxlength="10">
+            </label>
+          </div>
+          <label class="field">
+            <span>Delivery date</span>
+            <input type="date" name="deliveryDate" id="delivery-date">
+          </label>
+          <p class="field-note">Delivery is $8 flat, free on orders $50 and over. We'll confirm
+          whether your address is within our delivery area by email.</p>
+        </div>
+
+        <h2 class="order-h2">3. Your Info</h2>
+        <label class="field">
+          <span>Full name</span>
+          <input type="text" name="name" id="cust-name" required>
+        </label>
+        <div class="field-row">
+          <label class="field">
+            <span>Email</span>
+            <input type="email" name="email" id="cust-email" required>
+          </label>
+          <label class="field">
+            <span>Phone</span>
+            <input type="tel" name="phone" id="cust-phone">
+          </label>
+        </div>
+        <label class="field">
+          <span>Order notes (optional)</span>
+          <textarea name="notes" id="cust-notes" rows="3" placeholder="Allergies, gift message, anything else we should know"></textarea>
+        </label>
+
+        <p class="form-error" id="form-error" hidden></p>
+
+        <button type="submit" class="btn btn-primary btn-checkout" id="checkout-btn" disabled>
+          Proceed to Payment
+        </button>
+        <p class="secure-note">🔒 Payment is securely processed by Stripe — Lumi never sees or
+        stores your card details.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <span class="brand-word">lumi</span>
+      <p>Dessert &amp; Coffee · Est. 2026 · San Ramon, CA</p>
+    </div>
+    <div class="footer-col">
+      <h5>Get in Touch</h5>
+      <p><a href="mailto:lumidessert0728@gmail.com">lumidessert0728@gmail.com</a></p>
+      <p class="muted">Phone number — coming soon</p>
+    </div>
+    <div class="footer-col">
+      <h5>Follow Us</h5>
+      <p><a href="https://www.instagram.com/lumidessert0728/" target="_blank" rel="noopener">Instagram</a></p>
+      <p><a href="https://www.facebook.com/lumidessert0728" target="_blank" rel="noopener">Facebook</a></p>
+      <p>Rednote <span class="muted">— search 3412329923</span></p>
+    </div>
+    <div class="footer-col">
+      <h5>Explore</h5>
+      <p><a href="index.html#story">Our Story</a></p>
+      <p><a href="index.html#flavors">Flavors</a></p>
+      <p><a href="order.html">Order Online</a></p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Lumi Dessert. Handcrafted with love in San Ramon, California.</p>
+  </div>
+</footer>
+
+<script src="js/script.js"></script>
+<script src="js/order.js"></script>
+</body>
+</html>

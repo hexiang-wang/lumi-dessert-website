@@ -1,7 +1,11 @@
 .DS_Store
 
+# Node dependencies
+node_modules
+
 # Local Netlify folder
 .netlify
+deno.lock
 
 # Claude Code local session files
 .claude/scheduled_tasks.lock

@@ -366,6 +366,9 @@ ul { margin: 0; padding: 0; list-style: none; }
   color: var(--text-soft);
   font-size: 0.95rem;
 }
+.feature-flavor-copy .btn {
+  margin-top: 22px;
+}
 
 .flavor-grid {
   display: grid;
