@@ -1,8 +1,6 @@
-// Adds an email to the Lumi Dessert Mailchimp audience (single opt-in).
-// Uses PUT with an MD5-hashed email as the member id, which makes this an
-// upsert — resubmitting the same email is safe and just confirms them again.
-
-const crypto = require('crypto');
+// Adds an email to the Lumi Dessert Brevo list (single opt-in).
+// updateEnabled:true makes this an upsert — resubmitting the same email is
+// safe and just re-confirms them instead of erroring as a duplicate.
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -19,8 +17,8 @@ exports.handler = async (event) => {
     return jsonResponse(405, { error: 'Method not allowed' });
   }
 
-  const { MAILCHIMP_API_KEY, MAILCHIMP_AUDIENCE_ID } = process.env;
-  if (!MAILCHIMP_API_KEY || !MAILCHIMP_AUDIENCE_ID) {
+  const { BREVO_API_KEY, BREVO_LIST_ID } = process.env;
+  if (!BREVO_API_KEY || !BREVO_LIST_ID) {
     return jsonResponse(500, {
       error: 'Sign-up isn’t connected yet. Please check back soon!',
     });
@@ -45,36 +43,30 @@ exports.handler = async (event) => {
     return jsonResponse(400, { error: 'Please enter a valid email address' });
   }
 
-  const dc = MAILCHIMP_API_KEY.split('-')[1];
-  if (!dc) {
-    return jsonResponse(500, { error: 'Sign-up is misconfigured. Please try again later.' });
-  }
-
-  const subscriberHash = crypto.createHash('md5').update(email).digest('hex');
-  const url = `https://${dc}.api.mailchimp.com/3.0/lists/${MAILCHIMP_AUDIENCE_ID}/members/${subscriberHash}`;
-
   const body = {
-    email_address: email,
-    status_if_new: 'subscribed',
-    status: 'subscribed',
+    email,
+    listIds: [Number(BREVO_LIST_ID)],
+    updateEnabled: true,
   };
   if (name) {
-    body.merge_fields = { FNAME: name };
+    body.attributes = { FIRSTNAME: name };
   }
 
   try {
-    const res = await fetch(url, {
-      method: 'PUT',
+    const res = await fetch('https://api.brevo.com/v3/contacts', {
+      method: 'POST',
       headers: {
-        Authorization: `Basic ${Buffer.from(`anystring:${MAILCHIMP_API_KEY}`).toString('base64')}`,
+        'api-key': BREVO_API_KEY,
         'Content-Type': 'application/json',
+        Accept: 'application/json',
       },
       body: JSON.stringify(body),
     });
 
-    if (!res.ok) {
+    // Brevo returns 201 for a new contact, 204 for an existing one that was updated.
+    if (!res.ok && res.status !== 204) {
       const err = await res.json().catch(() => ({}));
-      console.error('Mailchimp error:', err);
+      console.error('Brevo error:', err);
       return jsonResponse(502, { error: 'Could not join the list right now. Please try again.' });
     }
 

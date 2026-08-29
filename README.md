@@ -19,7 +19,7 @@ js/script.js                 Mobile nav toggle + scroll-reveal animation
 js/order.js                  Cart state, fulfillment toggle, checkout submit
 js/subscribe.js               "Join Our List" signup form submit handler
 netlify/functions/create-checkout-session.js   Server-side Stripe Checkout Session creation
-netlify/functions/subscribe.js                 Server-side Mailchimp signup
+netlify/functions/subscribe.js                 Server-side Brevo signup
 netlify.toml                  Netlify build/functions config
 package.json                  Node deps for the serverless functions (stripe)
 images/                       Logo, hero photo, original source images
@@ -28,7 +28,7 @@ images/                       Logo, hero photo, original source images
 
 No frontend build step — plain HTML/CSS/JS. The one Node dependency
 (`stripe`) is only used by the checkout function; the subscribe function
-calls Mailchimp's API directly with no extra dependency.
+calls Brevo's API directly with no extra dependency.
 
 ## Local preview
 
@@ -89,36 +89,40 @@ code needed for that.
 ## Email list & marketing emails
 
 The "Get Sweet Updates" form (homepage + order confirmation page) adds
-subscribers straight into a **Mailchimp** audience via
+subscribers straight into a **Brevo** list via
 `netlify/functions/subscribe.js`. This is single opt-in — submitting the
 form subscribes someone immediately, no confirmation email required.
 
+Brevo was chosen over Mailchimp because its free plan is genuinely
+free forever (unlimited contacts, 300 emails/day), where Mailchimp's free
+tier is now capped at 250 contacts / 500 emails per month and new signups
+are often funneled into a 14-day paid trial first.
+
 **Actually composing and sending marketing emails ("newsletters") is done
-in the Mailchimp dashboard, not on this site** — Mailchimp handles
-scheduling, unsubscribe links, and legal compliance (CAN-SPAM) for you.
-This site's only job is feeding new signups into your audience.
+in the Brevo dashboard, not on this site** — Brevo handles scheduling,
+unsubscribe links, and legal compliance (CAN-SPAM) for you. This site's
+only job is feeding new signups into your list.
 
 **One-time setup, done by the shop owner (not by Claude — API keys must
 never be pasted into chat):**
 
-1. Create a free Mailchimp account at https://login.mailchimp.com/signup/
-   (free up to 500 contacts).
-2. Create an **Audience** (Mailchimp may call it "Audience" or "List") —
-   e.g. "Lumi Dessert Subscribers."
-3. Get your **API key**: Account → Extras → API keys → Create A Key. It
-   looks like `abc123...xyz-us21` — the `-us21` suffix matters, keep it.
-4. Get your **Audience ID**: Audience → Settings → Audience name and
-   defaults → look for "Audience ID."
-5. In the Netlify dashboard — https://app.netlify.com/projects/lumi-dessert/settings/env —
+1. Create a free Brevo account at https://onboarding.brevo.com/account/register
+   (skip/decline any prompt to start a paid trial — the free plan needs no
+   trial or credit card).
+2. Create a **List** under Contacts → Lists — e.g. "Lumi Dessert Subscribers."
+   Note its numeric **List ID** (shown next to the list name).
+3. Get your **API key**: click your account name (top right) → SMTP & API →
+   API Keys → Generate a new API key.
+4. In the Netlify dashboard — https://app.netlify.com/projects/lumi-dessert/settings/env —
    add two environment variables:
-   - `MAILCHIMP_API_KEY` = the key from step 3
-   - `MAILCHIMP_AUDIENCE_ID` = the ID from step 4
-6. Redeploy (`npx netlify-cli deploy --prod --dir=.`) and submit a test
-   email on the site — it should appear in your Mailchimp audience within
-   a few seconds.
-7. To send a newsletter: in Mailchimp, go to Campaigns → Create Campaign,
-   write it, and hit Send (or Schedule for a future/recurring date). That
-   part is entirely inside Mailchimp's UI.
+   - `BREVO_API_KEY` = the key from step 3
+   - `BREVO_LIST_ID` = the numeric ID from step 2
+5. Redeploy (`npx netlify-cli deploy --prod --dir=.`) and submit a test
+   email on the site — it should appear in your Brevo list within a few
+   seconds.
+6. To send a newsletter: in Brevo, go to Campaigns → Create a campaign,
+   write it, and hit Send (or Schedule). That part is entirely inside
+   Brevo's UI.
 
 ## Deploying changes
 
@@ -146,9 +150,9 @@ repository (one-time, requires authorizing the Netlify GitHub App).
 - Confirm social handles: Instagram/Facebook `@lumidessert0728`, Rednote `3412329923`
 - **`STRIPE_SECRET_KEY` environment variable in Netlify** — checkout returns
   a friendly "payments not configured" message until this is set (see above)
-- **`MAILCHIMP_API_KEY` and `MAILCHIMP_AUDIENCE_ID` environment variables in
-  Netlify** — the signup form returns a friendly "not connected yet"
-  message until these are set (see above)
+- **`BREVO_API_KEY` and `BREVO_LIST_ID` environment variables in Netlify** —
+  the signup form returns a friendly "not connected yet" message until
+  these are set (see above)
 - Delivery fee ($8 flat, free over $50) and service area are placeholders —
   adjust `DELIVERY_FEE_CENTS` / `FREE_DELIVERY_THRESHOLD_CENTS` in
   `netlify/functions/create-checkout-session.js` (and the matching constants
