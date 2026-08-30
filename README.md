@@ -225,7 +225,6 @@ repository (one-time, requires authorizing the Netlify GitHub App).
 
 - Farmers market name, location & schedule (see "Visit Us" section and the
   pickup note on the order page)
-- Phone number for the footer
 - Confirm social handles: Instagram/Facebook `@lumidessert0728`, Rednote `3412329923`
 - **`STRIPE_SECRET_KEY` environment variable in Netlify** — checkout returns
   a friendly "payments not configured" message until this is set (see above)
