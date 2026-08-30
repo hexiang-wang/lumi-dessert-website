@@ -221,11 +221,25 @@ To make step 3 automatic on every push, link the GitHub repo in the Netlify
 dashboard: Site settings → Build & deploy → Continuous deployment → Link
 repository (one-time, requires authorizing the Netlify GitHub App).
 
+## Social links & QR codes
+
+Facebook and Rednote links are real, verified URLs (decoded directly from
+QR codes the owners generated), not guessed vanity URLs:
+- Facebook: `https://www.facebook.com/profile.php?id=61593107233655`
+- Rednote: `https://xhslink.com/m/3kadYJiw4S0` (official short-link domain)
+- Instagram: `https://www.instagram.com/lumidessert0728/`
+
+The "Scan to Connect" panel in the homepage's Visit Us section
+(`images/qr/`) uses the shop's own official QR code images (Instagram and
+Rednote are official app-generated exports with their real logos; Facebook
+and Website are cropped from the owners' business card design) — not
+generated fresh, so they match what's already printed on physical
+materials. Source/uncropped originals are in `images/source/qr-source/`.
+
 ## Still needed
 
 - Farmers market name, location & schedule (see "Visit Us" section and the
   pickup note on the order page)
-- Confirm social handles: Instagram/Facebook `@lumidessert0728`, Rednote `3412329923`
 - **`STRIPE_SECRET_KEY` environment variable in Netlify** — checkout returns
   a friendly "payments not configured" message until this is set (see above)
 - **Verify "Email finalized invoices to customers" is on** in Stripe
