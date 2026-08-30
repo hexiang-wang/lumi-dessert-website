@@ -122,6 +122,7 @@ exports.handler = async (event) => {
 
   const metadata = {
     fulfillment,
+    fulfilled: 'no',
     customer_name: customer.name,
     customer_phone: customer.phone || '',
     notes: (notes || '').slice(0, 400),
@@ -144,6 +145,10 @@ exports.handler = async (event) => {
       success_url: `${siteUrl}/order-success.html?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/order.html?cancelled=1`,
       metadata,
+      // Metadata on the Session alone doesn't copy to the PaymentIntent/Charge,
+      // so it never shows on the Dashboard's main Payments page — set it here
+      // too so it's visible (and editable) on the actual payment record.
+      payment_intent_data: { metadata },
       automatic_tax: { enabled: true },
     });
 
