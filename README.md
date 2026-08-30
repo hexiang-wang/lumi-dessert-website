@@ -18,8 +18,12 @@ css/order.css                Order page styling
 js/script.js                 Mobile nav toggle + scroll-reveal animation
 js/order.js                  Cart state, fulfillment toggle, checkout submit
 js/subscribe.js               "Join Our List" signup form submit handler
+admin/invoice.html             Internal tool: create & send a custom Stripe Invoice
+js/admin-invoice.js            Passphrase gate + line-item form logic for admin/invoice.html
 netlify/functions/create-checkout-session.js   Server-side Stripe Checkout Session creation
 netlify/functions/subscribe.js                 Server-side Brevo signup
+netlify/functions/create-invoice.js            Server-side custom Stripe Invoice creation
+robots.txt                     Blocks /admin/ from search engine indexing
 netlify.toml                  Netlify build/functions config
 package.json                  Node deps for the serverless functions (stripe)
 images/                       Logo, hero photo, original source images
@@ -86,6 +90,61 @@ order comes in, turn on Stripe's built-in **email notifications for
 successful payments** (Dashboard → Settings → Notifications) — no extra
 code needed for that.
 
+## Sales tax (Stripe Tax)
+
+Checkout Sessions and custom invoices both have `automatic_tax: { enabled: true }`
+set, with product tax code `txcd_40040000` ("Food for Non-Immediate
+Consumption") on tiramisu line items and `txcd_92010001` ("Shipping") on the
+delivery fee — both confirmed against Stripe's canonical Tax Codes API. This
+code is for cold, take-away food with no utensils provided; California
+generally exempts that as grocery-type food, so $0 tax is the expected,
+correct result for most orders — not a bug.
+
+**One-time setup, done by the shop owner (in Stripe's Dashboard, not by
+Claude):**
+
+1. **Sandbox/test mode and live mode have separate settings** — repeat this
+   for both once you're ready to go live.
+2. Set your business's **head office address**: https://dashboard.stripe.com/test/settings/tax
+   (Stripe Tax refuses to calculate anything without this.)
+3. Record your **California Seller's Permit** as a registration: same Tax
+   settings page → Registrations → Add registration → California. This is
+   just telling *Stripe* about a permit you already got from CDTFA — Stripe
+   doesn't calculate or collect tax anywhere you haven't added a
+   registration for, even if `automatic_tax` is on.
+4. If you ever sell something that genuinely is taxable (hot drinks, merch,
+   etc.), give it a different product tax code — see
+   `netlify/functions/create-checkout-session.js` and
+   `netlify/functions/create-invoice.js`.
+
+## Custom / catering invoices
+
+For orders that don't fit the fixed $11-per-flavor online cart — catering,
+bulk orders, custom pricing — there's a small internal tool at
+**`/admin/invoice.html`** (not linked from the public site; blocked from
+search indexing via `robots.txt`). Enter a customer, address, and free-form
+line items; it creates a Stripe Customer + Invoice and finalizes it, which
+sends the customer a payable hosted invoice link by email.
+
+- Gated by a passphrase (`ADMIN_INVOICE_SECRET` env var) — Claude generated
+  and set this one directly since it's an internal access key for a tool on
+  your own site, not a third-party account credential. The passphrase itself
+  is deliberately **not** written here (this file is in a public repo) — it
+  was given to the shop owner directly in chat. Rotate it any time with
+  `npx netlify-cli env:set ADMIN_INVOICE_SECRET <new-value>` and redeploy;
+  the old passphrase stops working immediately.
+- **Verify this Dashboard setting is on**, or invoices are created but never
+  emailed: Settings → Billing → *Subscriptions and emails* →
+  "Email finalized invoices to customers." This wasn't tested end-to-end
+  (the test order used a fake email address) — only that the invoice itself
+  is created correctly and the hosted payment page works.
+- Requires the customer's full address (state + ZIP) up front, since unlike
+  Checkout, invoices don't collect an address interactively before tax
+  calculates.
+- All line items use the same food tax code as the online cart — for a
+  non-food invoice item, use the Stripe Dashboard's own invoice creator
+  instead, which supports per-line tax codes.
+
 ## Email list & marketing emails
 
 The "Get Sweet Updates" form (homepage + order confirmation page) adds
@@ -150,6 +209,9 @@ repository (one-time, requires authorizing the Netlify GitHub App).
 - Confirm social handles: Instagram/Facebook `@lumidessert0728`, Rednote `3412329923`
 - **`STRIPE_SECRET_KEY` environment variable in Netlify** — checkout returns
   a friendly "payments not configured" message until this is set (see above)
+- **Verify "Email finalized invoices to customers" is on** in Stripe
+  Settings → Billing, or the `/admin/invoice.html` tool creates invoices
+  that never actually reach the customer's inbox (see Invoicing section)
 - **`BREVO_API_KEY` and `BREVO_LIST_ID` environment variables in Netlify** —
   the signup form returns a friendly "not connected yet" message until
   these are set (see above)
