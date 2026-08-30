@@ -4,13 +4,11 @@
 
 const FLAVORS = [
   'Classic Tiramisu',
-  'Matcha',
-  'Sea Salt Caramel',
-  'Blueberry',
-  'Strawberry',
-  'Mango',
-  'Coconut Latte',
-  'Chocolate Hazelnut',
+  'Blueberry Yogurt Tiramisu',
+  'Mango Tiramisu',
+  'Dream Choco Tiramisu',
+  'Strawberry Tiramisu',
+  'Coconut Latte Tiramisu',
 ];
 
 const PRICE = 11; // dollars, flat per flavor

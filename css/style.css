@@ -372,42 +372,65 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 .flavor-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
 }
 .flavor-card {
   background: var(--white);
   border-radius: 18px;
-  padding: 28px 18px;
+  overflow: hidden;
   text-align: center;
   box-shadow: 0 6px 18px rgba(107,70,48,0.08);
-  border-top: 5px solid var(--flavor-color, var(--pink));
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .flavor-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 14px 26px rgba(107,70,48,0.14);
 }
+.flavor-card-media {
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+}
+.flavor-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 .flavor-emoji {
   font-size: 2rem;
   display: block;
-  margin-bottom: 12px;
+  margin: 28px 0 12px;
 }
 .flavor-card h4 {
-  margin: 0;
-  font-size: 1rem;
+  margin: 18px 18px 0;
+  font-size: 1.05rem;
   color: var(--coffee-deep);
   font-weight: 600;
 }
 .flavor-card p {
-  margin: 6px 0 0;
-  font-size: 0.82rem;
+  margin: 6px 18px 20px;
+  font-size: 0.85rem;
   color: var(--text-soft);
+  line-height: 1.5;
 }
 .flavor-card-seasonal {
   background: linear-gradient(135deg, var(--pink-soft), var(--yellow));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
-.flavor-card-seasonal h4, .flavor-card-seasonal p { color: var(--coffee-deep); }
+.flavor-card-seasonal h4, .flavor-card-seasonal p { color: var(--coffee-deep); margin-left: 18px; margin-right: 18px; }
+
+.allergen-note {
+  max-width: 720px;
+  margin: 36px auto 0;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--text-soft);
+  line-height: 1.6;
+}
 
 /* ---------- Quality ---------- */
 .quality {

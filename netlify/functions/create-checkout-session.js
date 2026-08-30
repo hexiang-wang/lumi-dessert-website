@@ -15,13 +15,11 @@ const TAX_CODE_SHIPPING = 'txcd_92010001'; // Shipping (optional — pickup is a
 
 const FLAVORS = [
   'Classic Tiramisu',
-  'Matcha',
-  'Sea Salt Caramel',
-  'Blueberry',
-  'Strawberry',
-  'Mango',
-  'Coconut Latte',
-  'Chocolate Hazelnut',
+  'Blueberry Yogurt Tiramisu',
+  'Mango Tiramisu',
+  'Dream Choco Tiramisu',
+  'Strawberry Tiramisu',
+  'Coconut Latte Tiramisu',
 ];
 
 const DELIVERY_FEE_CENTS = 800; // $8 flat
@@ -93,7 +91,7 @@ exports.handler = async (event) => {
     line_items.push({
       price_data: {
         currency: 'usd',
-        product_data: { name: `${flavor} Tiramisu (8–9oz)`, tax_code: TAX_CODE_FOOD },
+        product_data: { name: `${flavor} (8–9oz)`, tax_code: TAX_CODE_FOOD },
         unit_amount: FLAT_PRICE_CENTS,
         tax_behavior: 'exclusive',
       },
