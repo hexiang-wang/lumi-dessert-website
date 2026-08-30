@@ -695,6 +695,22 @@ ul { margin: 0; padding: 0; list-style: none; }
 .footer-col p { margin: 0 0 10px; font-size: 0.92rem; }
 .footer-col a:hover { color: var(--pink-soft); }
 .muted { opacity: 0.6; font-size: 0.85rem !important; }
+
+.social-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.social-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(253,246,238,0.75);
+  font-size: 0.92rem;
+  transition: color 0.2s ease;
+}
+.social-link:hover { color: var(--pink-soft); }
+.social-link svg { flex-shrink: 0; }
 .footer-bottom {
   text-align: center;
   font-size: 0.8rem;
