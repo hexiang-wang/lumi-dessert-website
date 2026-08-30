@@ -48,6 +48,9 @@ exports.handler = async (event) => {
   if (!customer || !customer.name || !customer.email) {
     return jsonResponse(400, { error: 'Customer name and email are required' });
   }
+  if (!customer.address1 || !customer.city || !customer.state || !customer.zip) {
+    return jsonResponse(400, { error: 'Full customer address is required for tax calculation' });
+  }
   if (!Array.isArray(items) || items.length === 0 || items.length > MAX_ITEMS) {
     return jsonResponse(400, { error: `Add between 1 and ${MAX_ITEMS} line items` });
   }
@@ -71,17 +74,29 @@ exports.handler = async (event) => {
   }
 
   const stripe = Stripe(STRIPE_SECRET_KEY);
+  const address = {
+    line1: customer.address1,
+    city: customer.city,
+    state: customer.state,
+    postal_code: customer.zip,
+    country: 'US',
+  };
 
   try {
     let stripeCustomer;
     const existing = await stripe.customers.list({ email: customer.email, limit: 1 });
     if (existing.data.length > 0) {
-      stripeCustomer = existing.data[0];
+      stripeCustomer = await stripe.customers.update(existing.data[0].id, {
+        name: customer.name,
+        phone: customer.phone || undefined,
+        address,
+      });
     } else {
       stripeCustomer = await stripe.customers.create({
         name: customer.name,
         email: customer.email,
         phone: customer.phone || undefined,
+        address,
       });
     }
 

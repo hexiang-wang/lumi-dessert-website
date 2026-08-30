@@ -62,6 +62,25 @@
           <input type="tel" id="cust-phone">
         </label>
       </div>
+      <label class="field">
+        <span>Street address</span>
+        <input type="text" id="cust-address1" placeholder="123 Main St" required>
+      </label>
+      <div class="field-row">
+        <label class="field">
+          <span>City</span>
+          <input type="text" id="cust-city" value="San Ramon" required>
+        </label>
+        <label class="field field-narrow">
+          <span>State</span>
+          <input type="text" id="cust-state" value="CA" maxlength="2" required>
+        </label>
+        <label class="field field-narrow">
+          <span>ZIP</span>
+          <input type="text" id="cust-zip" inputmode="numeric" maxlength="10" required>
+        </label>
+      </div>
+      <p class="field-note" style="margin-top:-10px;">Required for Stripe Tax to calculate the correct rate — invoices (unlike online checkout) don't collect an address interactively.</p>
 
       <hr class="divider">
 
