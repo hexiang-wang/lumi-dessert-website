@@ -4,6 +4,14 @@
   padding: 70px 0 20px;
   background: linear-gradient(180deg, var(--pink-pale) 0%, var(--cream) 100%);
 }
+.menu-board-img {
+  display: block;
+  width: 100%;
+  max-width: 900px;
+  margin: 36px auto 0;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+}
 
 .order-section {
   padding: 50px 0;
