@@ -1,5 +1,5 @@
 // Creates and sends a one-off Stripe Invoice for a custom/catering order.
-// Internal tool only — gated by ADMIN_INVOICE_SECRET, not linked from the
+// Internal tool only — gated by ADMIN_SECRET, not linked from the
 // public site. All line items are treated as food (same product tax code
 // used on the online checkout) since this is scoped to tiramisu orders.
 
@@ -24,11 +24,11 @@ exports.handler = async (event) => {
     return jsonResponse(405, { error: 'Method not allowed' });
   }
 
-  const { STRIPE_SECRET_KEY, ADMIN_INVOICE_SECRET } = process.env;
+  const { STRIPE_SECRET_KEY, ADMIN_SECRET } = process.env;
   if (!STRIPE_SECRET_KEY) {
     return jsonResponse(500, { error: 'Payments are not configured yet.' });
   }
-  if (!ADMIN_INVOICE_SECRET) {
+  if (!ADMIN_SECRET) {
     return jsonResponse(500, { error: 'Invoicing tool is not configured yet.' });
   }
 
@@ -39,7 +39,7 @@ exports.handler = async (event) => {
     return jsonResponse(400, { error: 'Invalid request body' });
   }
 
-  if (payload.secret !== ADMIN_INVOICE_SECRET) {
+  if (payload.secret !== ADMIN_SECRET) {
     return jsonResponse(401, { error: 'Incorrect passphrase' });
   }
 

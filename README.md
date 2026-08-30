@@ -19,10 +19,14 @@ js/script.js                 Mobile nav toggle + scroll-reveal animation
 js/order.js                  Cart state, fulfillment toggle, checkout submit
 js/subscribe.js               "Join Our List" signup form submit handler
 admin/invoice.html             Internal tool: create & send a custom Stripe Invoice
+admin/orders.html               Internal tool: view orders, toggle fulfilled status
 js/admin-invoice.js            Passphrase gate + line-item form logic for admin/invoice.html
+js/admin-orders.js              Passphrase gate + order list/fulfillment logic for admin/orders.html
 netlify/functions/create-checkout-session.js   Server-side Stripe Checkout Session creation
 netlify/functions/subscribe.js                 Server-side Brevo signup
 netlify/functions/create-invoice.js            Server-side custom Stripe Invoice creation
+netlify/functions/list-orders.js               Server-side: list recent orders for admin/orders.html
+netlify/functions/mark-fulfilled.js            Server-side: update fulfilled status on PI + Charge
 robots.txt                     Blocks /admin/ from search engine indexing
 netlify.toml                  Netlify build/functions config
 package.json                  Node deps for the serverless functions (stripe)
@@ -117,22 +121,38 @@ Claude):**
    `netlify/functions/create-checkout-session.js` and
    `netlify/functions/create-invoice.js`.
 
-## Custom / catering invoices
+## Internal admin tools
 
-For orders that don't fit the fixed $11-per-flavor online cart — catering,
-bulk orders, custom pricing — there's a small internal tool at
-**`/admin/invoice.html`** (not linked from the public site; blocked from
-search indexing via `robots.txt`). Enter a customer, address, and free-form
-line items; it creates a Stripe Customer + Invoice and finalizes it, which
-sends the customer a payable hosted invoice link by email.
+Two passphrase-gated pages, not linked from the public site and blocked
+from search indexing via `robots.txt`:
 
-- Gated by a passphrase (`ADMIN_INVOICE_SECRET` env var) — Claude generated
-  and set this one directly since it's an internal access key for a tool on
-  your own site, not a third-party account credential. The passphrase itself
-  is deliberately **not** written here (this file is in a public repo) — it
-  was given to the shop owner directly in chat. Rotate it any time with
-  `npx netlify-cli env:set ADMIN_INVOICE_SECRET <new-value>` and redeploy;
-  the old passphrase stops working immediately.
+- **`/admin/invoice.html`** — for orders that don't fit the fixed
+  $11-per-flavor online cart (catering, bulk, custom pricing). Enter a
+  customer, address, and free-form line items; it creates a Stripe
+  Customer + Invoice and finalizes it, which sends the customer a payable
+  hosted invoice link by email.
+- **`/admin/orders.html`** — lists the last 50 successful orders with their
+  fulfillment metadata, and a one-click **Mark Fulfilled** button per order.
+
+Both are gated by the same passphrase (`ADMIN_SECRET` env var) — Claude
+generated and set this one directly since it's an internal access key for
+tools on your own site, not a third-party account credential. The
+passphrase itself is deliberately **not** written here (this file is in a
+public repo) — it was given to the shop owner directly in chat. Rotate it
+any time with `npx netlify-cli env:set ADMIN_SECRET <new-value>` and
+redeploy; the old passphrase stops working immediately.
+
+**Why "Mark Fulfilled" updates two things per order:** every successful
+payment produces both a PaymentIntent *and* a Charge object — Stripe copies
+metadata from one to the other only once, at charge creation, with no
+ongoing sync. Editing metadata by hand in the Dashboard only touches
+whichever tab ("Payment intent" or "Latest charge") you happen to be on,
+which silently desyncs the two and made Dashboard metadata search behave
+inconsistently. `netlify/functions/mark-fulfilled.js` updates both objects
+together so this can't happen — use the Orders tool for this instead of
+editing metadata by hand in the Dashboard.
+
+**Invoicing notes:**
 - **Verify this Dashboard setting is on**, or invoices are created but never
   emailed: Settings → Billing → *Subscriptions and emails* →
   "Email finalized invoices to customers." This wasn't tested end-to-end
