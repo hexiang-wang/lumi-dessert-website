@@ -30,7 +30,7 @@
 
 .order-layout {
   display: grid;
-  grid-template-columns: 1.6fr 1fr;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
   gap: 44px;
   align-items: start;
 }
@@ -146,6 +146,7 @@
 /* Form */
 .order-form {
   max-width: 640px;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -206,7 +207,7 @@
   display: flex;
   gap: 14px;
 }
-.field-row .field { flex: 1; }
+.field-row .field { flex: 1; min-width: 0; }
 .field-narrow { flex: 0 0 90px !important; }
 .field-note {
   font-size: 0.84rem;
@@ -266,6 +267,6 @@
 .confirm-inner .btn { margin-top: 20px; }
 
 @media (max-width: 900px) {
-  .order-layout { grid-template-columns: 1fr; }
+  .order-layout { grid-template-columns: minmax(0, 1fr); }
   .order-summary { position: static; }
 }
