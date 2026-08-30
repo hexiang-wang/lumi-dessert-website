@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Create Invoice — Lumi Internal</title>
+<link rel="icon" href="../images/logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/order.css">
+<style>
+  body { background: var(--cream); }
+  .admin-wrap { max-width: 680px; margin: 0 auto; padding: 50px 24px 100px; }
+  .admin-title { font-family: var(--font-display); font-size: 1.8rem; color: var(--coffee-deep); margin: 0 0 6px; }
+  .admin-sub { color: var(--text-soft); margin: 0 0 32px; font-size: 0.95rem; }
+  .lock-screen .field { max-width: 320px; }
+  .line-items { display: flex; flex-direction: column; gap: 12px; margin-bottom: 8px; }
+  .line-item-row { display: grid; grid-template-columns: 1fr 80px 110px 34px; gap: 10px; align-items: end; }
+  .line-item-row .field { margin-bottom: 0; }
+  .remove-row { background: none; border: none; color: #c0392b; font-size: 1.3rem; cursor: pointer; padding: 10px 0; }
+  .add-row-btn { background: none; border: 1.5px dashed var(--pink); color: var(--pink); border-radius: 10px; padding: 10px; font-weight: 600; cursor: pointer; margin-bottom: 20px; }
+  .result-box { margin-top: 24px; padding: 20px; border-radius: 14px; background: var(--white); border: 1px solid rgba(107,70,48,0.12); }
+  .result-box a { color: var(--pink); font-weight: 600; word-break: break-all; }
+  hr.divider { border: none; border-top: 1px solid rgba(107,70,48,0.12); margin: 30px 0; }
+</style>
+</head>
+<body>
+
+<div class="admin-wrap">
+  <a href="../index.html" style="font-family:var(--font-script);font-size:1.6rem;color:var(--pink);text-decoration:none;">lumi</a>
+
+  <div id="lock-screen" class="lock-screen">
+    <h1 class="admin-title" style="margin-top:24px;">Enter Passphrase</h1>
+    <p class="admin-sub">Internal tool — not for customers.</p>
+    <label class="field">
+      <span>Passphrase</span>
+      <input type="password" id="passphrase-input">
+    </label>
+    <button class="btn btn-primary" id="unlock-btn">Unlock</button>
+    <p class="form-error" id="lock-error" hidden></p>
+  </div>
+
+  <div id="invoice-tool" hidden>
+    <h1 class="admin-title">Create a Custom Invoice</h1>
+    <p class="admin-sub">For catering orders, large custom orders, or anything outside the online cart. Stripe emails the customer a payable invoice automatically.</p>
+
+    <form id="invoice-form">
+      <label class="field">
+        <span>Customer name</span>
+        <input type="text" id="cust-name" required>
+      </label>
+      <div class="field-row">
+        <label class="field">
+          <span>Email</span>
+          <input type="email" id="cust-email" required>
+        </label>
+        <label class="field">
+          <span>Phone (optional)</span>
+          <input type="tel" id="cust-phone">
+        </label>
+      </div>
+
+      <hr class="divider">
+
+      <h2 class="order-h2">Line Items</h2>
+      <div class="line-items" id="line-items"></div>
+      <button type="button" class="add-row-btn" id="add-row-btn">+ Add line item</button>
+
+      <hr class="divider">
+
+      <div class="field-row">
+        <label class="field">
+          <span>Days until due</span>
+          <input type="number" id="days-until-due" value="7" min="1" max="90">
+        </label>
+      </div>
+      <label class="field">
+        <span>Memo / note (optional, shows on the invoice)</span>
+        <textarea id="memo" rows="2" placeholder="e.g. 50th birthday catering order"></textarea>
+      </label>
+
+      <p class="form-error" id="form-error" hidden></p>
+
+      <button type="submit" class="btn btn-primary btn-checkout" id="submit-btn">Create &amp; Send Invoice</button>
+    </form>
+
+    <div class="result-box" id="result-box" hidden></div>
+  </div>
+</div>
+
+<script src="../js/admin-invoice.js"></script>
+</body>
+</html>
