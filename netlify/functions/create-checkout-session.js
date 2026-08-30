@@ -149,7 +149,7 @@ exports.handler = async (event) => {
 
     return jsonResponse(200, { url: session.url });
   } catch (err) {
-    console.error('Stripe error:', err);
+    console.error('Stripe error:', err && err.message);
     return jsonResponse(500, { error: 'Could not start checkout. Please try again.' });
   }
 };
