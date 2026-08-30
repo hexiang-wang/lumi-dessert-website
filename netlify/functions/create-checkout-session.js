@@ -6,6 +6,13 @@ const Stripe = require('stripe');
 
 const FLAT_PRICE_CENTS = 1100; // $11.00 per 8–9oz serving, every flavor
 
+// Stripe Tax product tax codes (from Stripe's canonical Tax Codes API —
+// see https://docs.stripe.com/tax/tax-codes). Tax is only actually
+// collected once an active CA registration is recorded in the Stripe
+// Dashboard (Tax → Registrations); until then these codes are inert.
+const TAX_CODE_FOOD = 'txcd_40040000'; // Food for Non-Immediate Consumption (no utensils provided)
+const TAX_CODE_SHIPPING = 'txcd_92010001'; // Shipping (optional — pickup is also offered)
+
 const FLAVORS = [
   'Classic Tiramisu',
   'Matcha',
@@ -86,8 +93,9 @@ exports.handler = async (event) => {
     line_items.push({
       price_data: {
         currency: 'usd',
-        product_data: { name: `${flavor} Tiramisu (8–9oz)` },
+        product_data: { name: `${flavor} Tiramisu (8–9oz)`, tax_code: TAX_CODE_FOOD },
         unit_amount: FLAT_PRICE_CENTS,
+        tax_behavior: 'exclusive',
       },
       quantity: qty,
     });
@@ -100,8 +108,9 @@ exports.handler = async (event) => {
       line_items.push({
         price_data: {
           currency: 'usd',
-          product_data: { name: 'Local delivery' },
+          product_data: { name: 'Local delivery', tax_code: TAX_CODE_SHIPPING },
           unit_amount: deliveryFeeCents,
+          tax_behavior: 'exclusive',
         },
         quantity: 1,
       });
@@ -135,6 +144,7 @@ exports.handler = async (event) => {
       success_url: `${siteUrl}/order-success.html?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/order.html?cancelled=1`,
       metadata,
+      automatic_tax: { enabled: true },
     });
 
     return jsonResponse(200, { url: session.url });
